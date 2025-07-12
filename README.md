@@ -27,4 +27,4 @@ create another folder named uploads to store the uploaded image files!**
 <img width="1919" height="898" alt="Screenshot 2025-06-07 190452" src="https://github.com/user-attachments/assets/a90ff3ba-ca0e-4a2f-832e-a4f2f05a56db" />
 <img width="1919" height="744" alt="Screenshot 2025-06-07 190429" src="https://github.com/user-attachments/assets/c0e9e180-c3b7-45e1-9896-065fb24525b3" />
 <img width="1919" height="786" alt="Screenshot 2025-06-07 190355" src="https://github.com/user-attachments/assets/7ac9d213-920b-4176-9485-dc9d264ad677" />
-[Uploading Screenshot 2025-06-07 190313.png…]()
+
