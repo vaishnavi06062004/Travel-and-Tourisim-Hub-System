@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yearly Calendar with Reminders</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .year-controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .year-controls button {
+      padding: 10px 15px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .months {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .month {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 10px;
+    }
+
+    .month h2 {
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      width: 14.2%;
+      text-align: center;
+      padding: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .today {
+      background: #007aff;
+      color: white;
+      border-radius: 50%;
+      padding: 5px;
+    }
+
+    .has-reminder {
+      background-color: #ffc107;
+      border-radius: 50%;
+    }
+
+    footer {
+      background-color: #0066cc;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    footer p {
+      font-size: 14px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      margin: 15% auto;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+    }
+
+    .modal-content textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      font-size: 16px;
+    }
+
+    #reminderList {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    #reminderList h2 {
+      margin-bottom: 15px;
+    }
+
+    #reminderList table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #reminderList th, #reminderList td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #reminderList th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+
+  <h1>CALENDAR</h1>
+
+  <div class="year-controls">
+    <button onclick="changeYear(-1)">Previous Year</button>
+    <span id="currentYear" style="font-size: 20px; font-weight: bold;"></span>
+    <button onclick="changeYear(1)">Next Year</button>
+  </div>
+
+  <div class="months" id="calendar"></div>
+
+  <div id="reminderList">
+    <h2>Upcoming Reminders</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Reminder</th>
+        </tr>
+      </thead>
+      <tbody id="reminderTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="modal" id="reminderModal">
+    <div class="modal-content">
+      <h3 id="reminderDate"></h3>
+      <textarea id="reminderText" placeholder="Enter reminder..."></textarea>
+      <button onclick="saveReminder()">Save</button>
+      <button onclick="removeReminder()">Delete</button>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    let currentYear = new Date().getFullYear();
+    let selectedDate = '';
+
+    function generateCalendar(year) {
+      document.getElementById('currentYear').textContent = year;
+      const calendarContainer = document.getElementById('calendar');
+      calendarContainer.innerHTML = '';
+      const today = new Date();
+
+      for (let month = 0; month < 12; month++) {
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const monthDiv = document.createElement('div');
+        monthDiv.className = 'month';
+        const title = document.createElement('h2');
+        title.textContent = monthNames[month];
+        monthDiv.appendChild(title);
+
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const daysRow = document.createElement('tr');
+        ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+          const th = document.createElement('th');
+          th.textContent = d;
+          daysRow.appendChild(th);
+        });
+        thead.appendChild(daysRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+        let date = 1;
+        for (let i = 0; i < 6; i++) {
+          const row = document.createElement('tr');
+          for (let j = 0; j < 7; j++) {
+            const cell = document.createElement('td');
+            if (i === 0 && j < firstDay) {
+              cell.textContent = '';
+            } else if (date > daysInMonth) {
+              cell.textContent = '';
+            } else {
+              cell.textContent = date;
+              const fullDate = `${year}-${month + 1}-${date}`;
+              cell.onclick = () => openModal(fullDate);
+
+              if (date === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                cell.classList.add('today');
+              }
+
+              if (localStorage.getItem(`reminder-${fullDate}`)) {
+                cell.classList.add('has-reminder');
+              }
+
+              date++;
+            }
+            row.appendChild(cell);
+          }
+          tbody.appendChild(row);
+        }
+        table.appendChild(tbody);
+        monthDiv.appendChild(table);
+        calendarContainer.appendChild(monthDiv);
+      }
+    }
+
+    function changeYear(offset) {
+      currentYear += offset;
+      generateCalendar(currentYear);
+      listAllReminders();
+    }
+
+    function openModal(dateStr) {
+      selectedDate = dateStr;
+      document.getElementById('reminderDate').textContent = `Reminder for ${dateStr}`;
+      document.getElementById('reminderText').value = localStorage.getItem(`reminder-${dateStr}`) || '';
+      document.getElementById('reminderModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('reminderModal').style.display = 'none';
+    }
+
+    function saveReminder() {
+      const reminder = document.getElementById('reminderText').value.trim();
+      if (reminder) {
+        localStorage.setItem(`reminder-${selectedDate}`, reminder);
+      } else {
+        localStorage.removeItem(`reminder-${selectedDate}`);
+      }
+      closeModal();
+      generateCalendar(currentYear);
+      listAllReminders();
+    }
+
+    function removeReminder() {
+      localStorage.removeItem(`reminder-${selectedDate}`);
+      closeModal();
+      generateCalendar(currentYear);
+      listAllReminders();
+    }
+
+    function listAllReminders() {
+      const now = new Date();
+      const tableBody = document.getElementById('reminderTableBody');
+      tableBody.innerHTML = '';
+      const reminders = [];
+
+      for (let key in localStorage) {
+        if (key.startsWith('reminder-')) {
+          const dateStr = key.replace('reminder-', '');
+          const [year, month, day] = dateStr.split('-').map(Number);
+          const dateObj = new Date(year, month - 1, day);
+          if (dateObj >= new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+            reminders.push({ date: dateObj, text: localStorage.getItem(key) });
+          }
+        }
+      }
+
+      reminders.sort((a, b) => a.date - b.date);
+
+      if (reminders.length === 0) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 2;
+        cell.textContent = 'No upcoming reminders.';
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+      } else {
+        reminders.forEach(rem => {
+          const row = document.createElement('tr');
+          const dateCell = document.createElement('td');
+          dateCell.textContent = rem.date.toDateString();
+          const textCell = document.createElement('td');
+          textCell.textContent = rem.text;
+          row.appendChild(dateCell);
+          row.appendChild(textCell);
+          tableBody.appendChild(row);
+        });
+      }
+    }
+
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+
+    function checkTodayReminder() {
+      const today = new Date();
+      const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+      const reminder = localStorage.getItem(`reminder-${dateStr}`);
+      if (reminder && Notification.permission === 'granted') {
+        new Notification("Today's Reminder", {
+          body: reminder,
+          icon: 'https://cdn-icons-png.flaticon.com/512/1827/1827370.png'
+        });
+      }
+    }
+
+    generateCalendar(currentYear);
+    checkTodayReminder();
+    listAllReminders();
+  </script>
+</body>
+</html>

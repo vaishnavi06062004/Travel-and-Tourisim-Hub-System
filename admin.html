@@ -1,0 +1,32 @@
+<!-- File: admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login - Travel Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Admin Panel - Login</h1>
+  </header>
+
+  <main>
+    <section id="login-section">
+      <h2>Please Login</h2>
+      <input type="text" id="admin-username" placeholder="Username" />
+      <input type="password" id="admin-password" placeholder="Password" />
+      <button onclick="adminLogin()">Login</button>
+      <p id="login-error" style="color: red;"></p>
+    </section>
+  </main>
+
+  <script src="js/admin.js"></script>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

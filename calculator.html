@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      background: #f8f8f8;
+    }
+    input[type="text"] {
+      width: 240px;
+      height: 40px;
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: right;
+      padding: 10px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+    button {
+      height: 60px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .history {
+      margin-top: 30px;
+      width: 300px;
+      background: #fff;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .history h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .history ul {
+      padding-left: 20px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .history button {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    footer {
+      background-color: #0066cc;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 50px;
+      width: 100%;
+    }
+    footer p {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+
+  <h1>Calculator</h1>
+  <input type="text" id="display" disabled />
+
+  <div class="buttons">
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button onclick="press('/')">/</button>
+
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button onclick="press('*')">*</button>
+
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button onclick="press('-')">-</button>
+
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="press('+')">+</button>
+
+    <button onclick="clearDisplay()" style="grid-column: span 4;">Clear</button>
+  </div>
+
+  <div class="history">
+    <h2>History</h2>
+    <ul id="historyList"></ul>
+    <button onclick="clearHistory()">Clear History</button>
+  </div>
+
+  <script>
+    let history = [];
+
+    // Load history from localStorage on page load
+    window.onload = function () {
+      const stored = localStorage.getItem("calcHistory");
+      if (stored) {
+        history = JSON.parse(stored);
+        updateHistory();
+      }
+    };
+
+    function press(val) {
+      document.getElementById("display").value += val;
+    }
+
+    function calculate() {
+      const input = document.getElementById("display").value;
+      try {
+        const result = eval(input);
+        document.getElementById("display").value = result;
+
+        // Save to history and localStorage
+        const entry = `${input} = ${result}`;
+        history.push(entry);
+        localStorage.setItem("calcHistory", JSON.stringify(history));
+        updateHistory();
+      } catch {
+        alert("Invalid Expression");
+      }
+    }
+
+    function clearDisplay() {
+      document.getElementById("display").value = "";
+    }
+
+    function updateHistory() {
+      const historyList = document.getElementById("historyList");
+      historyList.innerHTML = "";
+      history.slice().reverse().forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        historyList.appendChild(li);
+      });
+    }
+
+    function clearHistory() {
+      history = [];
+      localStorage.removeItem("calcHistory");
+      updateHistory();
+    }
+  </script>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

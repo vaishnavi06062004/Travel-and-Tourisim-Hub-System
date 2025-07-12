@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Destinations - Travel Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .options-menu {
+      display: none;
+      position: absolute;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .menu-item {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      background-color: #007bff;
+      color: white;
+    }
+    .destination-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .three-dots {
+      cursor: pointer;
+    }
+    footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manage Destinations</h1>
+    <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Add/Edit Destination</h2>
+      <form id="destination-form">
+        <input type="text" id="dest-name" placeholder="Destination Name" required />
+        <input type="text" id="dest-location" placeholder="Location" required />
+        <input type="number" id="dest-price" placeholder="Price" required />
+        <input type="text" id="dest-category" placeholder="Category" required />
+        <input type="file" id="dest-photo" accept="image/*" required />
+        <button type="submit">Save Destination</button>
+      </form>
+      
+      <ul id="destination-list"></ul>
+    </section>
+
+    <section>
+      <ul id="destination-list"></ul>
+    </section>
+  </main>
+
+  <script src="js/destinations.js"></script>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

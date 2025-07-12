@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Hotels - Travel Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .options-menu {
+      display: none;
+      position: absolute;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .menu-item {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .menu-item:hover {
+      background-color: #007bff;
+      color: white;
+    }
+    .hotel-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .three-dots {
+      cursor: pointer;
+    }
+    footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Manage Hotels</h1>
+    <button onclick="window.location.href='admin-dashboard.html'">Back to Dashboard</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Add/Edit Hotel</h2>
+      <form id="hotel-form">
+        <input type="text" id="hotel-name" placeholder="Hotel Name" required />
+        <input type="text" id="hotel-location" placeholder="Location" required />
+        <select id="hotel-destination"></select>
+        <input type="number" id="hotel-price" placeholder="Price per Night" required />
+        <input type="file" id="hotel-photo" accept="image/*" required />
+        <ul id="hotel-list"></ul>
+        <label for="filter-destination">Filter by Destination:</label>
+        <select id="filter-destination"></select>
+         <ul id="hotel-list"></ul>
+        <button type="submit">Add Hotel</button>
+      </form>
+    </section>
+
+    <section>
+    
+      <ul id="hotel-list"></ul>
+    </section>
+  </main>
+
+  <script src="js/hotels.js"></script>
+  <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer> 
+</body>
+</html>

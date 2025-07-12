@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Your Hotel</title>
+  <style>
+        body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .hotel-info {
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .hotel-info img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .hotel-info h2 {
+      margin-top: 10px;
+      font-size: 24px;
+      color: #333;
+    }
+    .hotel-info p {
+      font-size: 16px;
+      color: #555;
+    }
+    .booking-form {
+      margin-top: 30px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-size: 16px;
+      color: #333;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .form-group button {
+      width: 100%;
+      padding: 15px;
+      background-color: #007bff;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+       footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+   
+  <div class="container">
+    <h1>Book Your Hotel</h1>
+
+    <div class="hotel-info">
+      <img id="hotelImage" src="" alt="Hotel Image">
+      <h2 id="hotelName"></h2>
+      <p><strong>Location:</strong> <span id="hotelLocation"></span></p>
+      <p><strong>Price:</strong> ₹<span id="hotelPrice"></span> per night</p>
+    </div>
+
+    <div class="booking-form">
+      <form id="bookingForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="text" id="phone" name="phone" required placeholder="Enter your phone number">
+        </div>
+        <div class="form-group">
+          <label for="checkIn">Check-in Date</label>
+          <input type="date" id="checkIn" name="checkIn" required>
+        </div>
+        <div class="form-group">
+          <label for="checkOut">Check-out Date</label>
+          <input type="date" id="checkOut" name="checkOut" required>
+        </div>
+        <div class="form-group">
+          <button type="submit">Confirm Booking</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Get hotel details from URL
+    const params = new URLSearchParams(window.location.search);
+    const hotelName = params.get('hotelName');
+    const hotelLocation = params.get('hotelLocation');
+    const hotelPrice = params.get('hotelPrice');
+    const hotelImage = params.get('hotelImage');
+
+    // Populate hotel info
+    document.getElementById('hotelName').textContent = hotelName;
+    document.getElementById('hotelLocation').textContent = hotelLocation;
+    document.getElementById('hotelPrice').textContent = hotelPrice;
+    document.getElementById('hotelImage').src = hotelImage || "icons/default-hotel.jpg";
+
+    // Handle booking form
+    document.getElementById('bookingForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const booking = {
+        hotelName,
+        hotelLocation,
+        hotelPrice,
+        hotelImage,
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        checkIn: document.getElementById('checkIn').value,
+        checkOut: document.getElementById('checkOut').value
+      };
+
+      // Save to localStorage
+      let bookings = JSON.parse(localStorage.getItem('hotelBookings')) || [];
+      bookings.push(booking);
+      localStorage.setItem('hotelBookings', JSON.stringify(bookings));
+
+      alert('Hotel booking confirmed! Redirecting to view bookings...');
+      window.location.href = 'viewhotels.html';
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const hotelName = params.get('hotelName');
+    const hotelLocation = params.get('hotelLocation');
+    const hotelPrice = params.get('hotelPrice');
+    const hotelImage = params.get('hotelImage');
+
+    // Populate hotel info
+    document.getElementById('hotelName').textContent = hotelName;
+    document.getElementById('hotelLocation').textContent = hotelLocation;
+    document.getElementById('hotelPrice').textContent = hotelPrice ? `₹${hotelPrice} per night` : "N/A";
+    document.getElementById('hotelImage').src = hotelImage || "icons/default-hotel.jpg";
+});
+document.getElementById('bookingForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent page reload
+
+    const bookingData = {
+        hotelName: document.getElementById('hotelName').textContent,
+        hotelLocation: document.getElementById('hotelLocation').textContent,
+        hotelPrice: document.getElementById('hotelPrice').textContent.replace("₹", "").replace(" per night", ""), // Remove unwanted characters
+        hotelImage: document.getElementById('hotelImage').src,
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        checkIn: document.getElementById('checkIn').value,
+        checkOut: document.getElementById('checkOut').value
+    };
+
+    console.log("Sending booking data to server:", bookingData);
+
+    try {
+        const response = await fetch('http://localhost:3000/api/bookings', { // 🔹 Your MySQL API URL
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingData)
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        alert('Hotel booking confirmed! Redirecting to view bookings...');
+        window.location.href = 'viewhotels.html';
+    } catch (error) {
+        console.error("Error submitting booking:", error);
+        alert("Something went wrong. Try again!");
+    }
+});
+
+  </script>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Management</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px 5px 5px 0;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
+    .btn-add { background: #28a745; }
+    .btn-update { background: #007bff; }
+    .btn-clear { background: #6c757d; }
+    .btn-delete { background: #dc3545; }
+    #message {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    ul#customerList {
+      list-style: none;
+      padding-left: 0;
+    }
+    ul#customerList li {
+      background: #eee;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    ul#customerList button {
+      background: #17a2b8;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+    <nav>
+   
+      <a href="dashboard.html">Dashboard</a>
+  </nav>
+
+<div class="container">
+  <h1>Customer Management</h1>
+
+  <div class="form-group">
+    <label>Full Name</label>
+    <input type="text" id="name" />
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="email" />
+  </div>
+  <div class="form-group">
+    <label>Phone</label>
+    <input type="tel" id="phone" />
+  </div>
+  <div class="form-group">
+    <label>Gender</label>
+    <select id="gender">
+      <option value="">--Select--</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <button class="btn-add" onclick="addCustomer()">Add</button>
+  <button class="btn-update" onclick="prepareUpdate()">Load for Update</button>
+  <button class="btn-update" onclick="updateCustomer()">Save Update</button>
+  <button class="btn-delete" onclick="deleteSelectedCustomer()">Delete</button>
+  <button class="btn-clear" onclick="clearForm()">Clear</button>
+
+  <div id="message"></div>
+
+  <hr>
+  <h3>Existing Customers</h3>
+  <ul id="customerList"></ul>
+</div>
+
+<script>
+  const apiURL = "http://localhost:3000/api/customers";
+  let selectedCustomerId = null;
+
+  function showMessage(msg, color) {
+    const message = document.getElementById("message");
+    message.textContent = msg;
+    message.style.color = color;
+  }
+
+  function clearForm(clearSelectedCustomer = true) {
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("gender").value = "";
+    if (clearSelectedCustomer) {
+      selectedCustomerId = null;
+      showMessage("Form cleared. No customer selected.", "black");
+    }
+  }
+
+  function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  function isValidPhone(phone) {
+    const re = /^\d{10}$/;
+    return re.test(phone);
+  }
+
+  async function addCustomer() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const gender = document.getElementById("gender").value;
+
+    if (!name || !email || !phone || !gender) {
+      showMessage("All fields are required.", "red");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      showMessage("Invalid email format.", "red");
+      return;
+    }
+
+    if (!isValidPhone(phone)) {
+      showMessage("Phone must be 10 digits.", "red");
+      return;
+    }
+
+    try {
+      const res = await fetch(apiURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, gender }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.customer && result.customer.id) {
+        selectedCustomerId = result.customer.id;
+        showMessage("Customer added successfully and selected for update/delete.", "green");
+        clearForm(false);
+        loadCustomers();
+      } else {
+        showMessage(result.message || "Failed to add customer.", "red");
+      }
+    } catch (err) {
+      showMessage("Error adding customer. Please try again.", "red");
+      console.error(err);
+    }
+  }
+
+  async function prepareUpdate() {
+    if (!selectedCustomerId) {
+      showMessage("No customer selected for update.", "red");
+      return;
+    }
+    try {
+      const res = await fetch(`${apiURL}/${selectedCustomerId}`);
+      if (!res.ok) {
+        const errData = await res.json();
+        showMessage(`Failed to load customer: ${errData.message || res.status}`, "red");
+        return;
+      }
+      const customer = await res.json();
+
+      document.getElementById("name").value = customer.name;
+      document.getElementById("email").value = customer.email;
+      document.getElementById("phone").value = customer.phone;
+      document.getElementById("gender").value = customer.gender;
+
+      showMessage("Customer data loaded. Edit the form and click 'Save Update'.", "blue");
+    } catch (err) {
+      showMessage("Error fetching customer data.", "red");
+      console.error(err);
+    }
+  }
+
+  async function updateCustomer() {
+    const emailPrompt = prompt("Enter the email of the customer to update:");
+    if (!emailPrompt || !isValidEmail(emailPrompt)) {
+      showMessage("Please enter a valid email to update customer.", "red");
+      return;
+    }
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const gender = document.getElementById("gender").value;
+
+    if (!name || !phone || !gender) {
+      showMessage("All fields (except email) are required.", "red");
+      return;
+    }
+
+    if (!isValidPhone(phone)) {
+      showMessage("Phone must be 10 digits.", "red");
+      return;
+    }
+
+    try {
+      // First find customer by email
+      const resFind = await fetch(apiURL);
+      const customers = await resFind.json();
+      const match = customers.find(c => c.email === emailPrompt);
+
+      if (!match) {
+        showMessage("No customer found with that email.", "red");
+        return;
+      }
+
+      const updateRes = await fetch(`${apiURL}/${match.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email: emailPrompt, phone, gender }),
+      });
+
+      const updateResult = await updateRes.json();
+
+      if (updateRes.ok) {
+        showMessage("Customer updated successfully.", "green");
+        clearForm();
+        loadCustomers();
+      } else {
+        showMessage(updateResult.message || "Failed to update customer.", "red");
+      }
+    } catch (err) {
+      showMessage("Error updating customer.", "red");
+      console.error(err);
+    }
+  }
+
+  async function deleteSelectedCustomer() {
+    if (!selectedCustomerId) {
+      showMessage("No customer selected to delete.", "red");
+      return;
+    }
+    if (!confirm("Are you sure you want to delete this customer?")) return;
+
+    try {
+      const res = await fetch(`${apiURL}/${selectedCustomerId}`, {
+        method: "DELETE",
+      });
+      const result = await res.json();
+
+      if (res.ok) {
+        showMessage("Customer deleted successfully.", "green");
+        clearForm();
+        loadCustomers();
+      } else {
+        showMessage(result.message || "Failed to delete customer.", "red");
+      }
+    } catch (err) {
+      showMessage("Error deleting customer.", "red");
+      console.error(err);
+    }
+  }
+
+  function selectCustomer(id) {
+    selectedCustomerId = id;
+    showMessage("Customer selected. Click 'Load for Update' to edit.", "blue");
+  }
+
+  async function loadCustomers() {
+    try {
+      const res = await fetch(apiURL);
+      const customers = await res.json();
+      const list = document.getElementById("customerList");
+      list.innerHTML = "";
+
+      customers.forEach(cust => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${cust.name} - ${cust.email} - ${cust.phone} - ${cust.gender}
+          <button onclick="selectCustomer('${cust.id}')">Select</button>
+        `;
+        list.appendChild(li);
+      });
+    } catch (err) {
+      console.error("Failed to load customers", err);
+    }
+  }
+
+  window.onload = loadCustomers;
+</script>
+
+</body>
+</html>

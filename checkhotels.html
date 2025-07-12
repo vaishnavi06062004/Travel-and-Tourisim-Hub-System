@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Check Hotels</title>
+  <style>
+    /* Same styles as before for hotel cards */
+         body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .hotel-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .hotel-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+    }
+    .hotel-card:hover {
+      transform: scale(1.02);
+    }
+    .hotel-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .hotel-card .content {
+      padding: 15px;
+    }
+    .hotel-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #222;
+    }
+    .hotel-card p {
+      margin: 0 0 8px;
+      color: #555;
+    }
+    .hotel-card button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 0 0 10px 10px;
+    }
+    .hotel-card button:hover {
+      background-color: #0056b3;
+    }
+     footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+ 
+  <div class="container">
+    <h1>Hotels Near Your Destination</h1>
+    <div id="hotelList" class="hotel-list"></div>
+  </div>
+  <div id="message"></div>
+
+
+  <script>
+    console.log("Script loaded!");
+    
+    const hotels = {
+      "Calangute Beach": [
+        { name: "Calangute Beach Resort", price: 3000, photo: "icons/h1.jpg" },
+        { name: "Taj Resort & Convention Centre", price: 8000, photo: "icons/h2.jpg" },
+        { name: "Goa Marriott Resort", price: 12000, photo: "icons/h3.jpg" },
+        { name: "Beachside Resort", price: 5000, photo: "icons/h4.jpg" },
+        { name: "Sea View Resort", price: 6500, photo: "icons/h5.jpg" }
+      ],
+      "Tambdi Surla Temple": [
+        { name: "Tambdi Surla Heritage Hotel", price: 4000, photo: "icons/h6.jpg" },
+        { name: "The Heritage Village Resort", price: 5000, photo: "icons/h7.jpg" },
+        { name: "Shan Resorts", price: 3500, photo: "icons/h8.jpg" },
+        { name: "Tropical Retreat", price: 6000, photo: "icons/h9.jpg" },
+        { name: "Surla Temple Resort", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Shantadurga Temple": [
+        { name: "Shantadurga Resort", price: 3000, photo: "icons/h11.jpg" },
+        { name: "Grand Hyatt Goa", price: 9500, photo: "icons/h12.jpg" },
+        { name: "Calangute Palace", price: 7000, photo: "icons/h13.jpg" },
+        { name: "Goan Luxury Resort", price: 8000, photo: "icons/h14.jpg" },
+        { name: "Sunset View Hotel", price: 5000, photo: "icons/h15.jpg" }
+      ],
+      "Dudhsagar Falls Trek": [
+        { name: "Dudhsagar View Resort", price: 4000, photo: "icons/h16.jpg" },
+        { name: "Sahyadri Resort", price: 5500, photo: "icons/h17.jpg" },
+        { name: "Trekker's Rest", price: 3500, photo: "icons/h18.jpg" },
+        { name: "Jungle Retreat", price: 6000, photo: "icons/h19.jpg" },
+        { name: "Waterfall Resort", price: 7000, photo: "icons/h20.jpg" }
+      ],
+      "Bhagwan Mahavir Wildlife Sanctuary": [
+        { name: "Bhagwan Mahavir Wildlife Sanctuary", price: 5000, photo: "icons/h1.jpg" },
+        { name: "Jungle Haven Resort", price: 6500, photo: "icons/h2.jpg" },
+        { name: "Sanctuary Lodge", price: 4000, photo: "icons/h3.jpg" },
+        { name: "Wildlife Inn", price: 4500, photo: "icons/h4.jpg" },
+        { name: "Forest View Resort", price: 5500, photo: "icons/h5.jpg" }
+      ],
+      "Chorla Ghats": [
+        { name: "Chorla Hills Resort", price: 6000, photo: "icons/h6.jpg" },
+        { name: "Mountain View Resort", price: 7000, photo: "icons/h7.jpg" },
+        { name: "Chorla Eco Resort", price: 5000, photo: "icons/h8.jpg" },
+        { name: "Trekker's Den", price: 4500, photo: "icons/h9.jpg" },
+        { name: "Hilltop Retreat", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Kovalam Beach": [
+        { name: "Kovalam Beach Resort", price: 7000, photo: "icons/h11.jpg" },
+        { name: "Turtle Beach Resort", price: 9000, photo: "icons/h12.jpg" },
+        { name: "Varkala Beach Resort", price: 8500, photo: "icons/h13.jpg" },
+        { name: "Beachside Haven", price: 6000, photo: "icons/h14.jpg" },
+        { name: "Kovalam Sea Resort", price: 12000, photo: "icons/h15.jpg" }
+      ],
+      "Munnar Hills": [
+        { name: "Munnar Hilltop Resort", price: 7500, photo: "icons/h16.jpg" },
+        { name: "Tea Valley Resort", price: 8000, photo: "icons/h17.jpg" },
+        { name: "Green Valley Resort", price: 5500, photo: "icons/h18.jpg" },
+        { name: "Mountain View Lodge", price: 4500, photo: "icons/h19.jpg" },
+        { name: "Kundala Resort", price: 6500, photo: "icons/h20.jpg" }
+      ],
+      "Alleppey Backwaters": [
+        { name: "Alleppey Lake Resort", price: 6500, photo: "icons/h1.jpg" },
+        { name: "Backwater Haven", price: 7500, photo: "icons/h2.jpg" },
+        { name: "Vembanadu Lake Resort", price: 8000, photo: "icons/h3.jpg" },
+        { name: "Boathouse Retreat", price: 12000, photo: "icons/h4.jpg" },
+        { name: "Alleppey Houseboats", price: 9500, photo: "icons/h5.jpg" }
+      ],
+      "Athirappilly Waterfalls": [
+        { name: "Athirappilly View Resort", price: 6000, photo: "icons/h6.jpg" },
+        { name: "Waterfall Resort", price: 7000, photo: "icons/h7.jpg" },
+        { name: "Vazhachal Forest Lodge", price: 4000, photo: "icons/h8.jpg" },
+        { name: "Green Tree Resort", price: 5000, photo: "icons/h9.jpg" },
+        { name: "Chalakkudy Resort", price: 5500, photo: "icons/h10.jpg" }
+      ],
+      "Wayanad": [
+        { name: "Wayanad Wildlife Resort", price: 6500, photo: "icons/h11.jpg" },
+        { name: "Wayanad Resort", price: 7500, photo: "icons/h12.jpg" },
+        { name: "Edakkal Caves Resort", price: 5500, photo: "icons/h13.jpg" },
+        { name: "Vythiri Resort", price: 8000, photo: "icons/h14.jpg" },
+        { name: "Pookode Lake Resort", price: 9500, photo: "icons/h15.jpg" }
+      ],
+      "Nanda Devi Sanctuary": [
+        { name: "Nanda Devi Eco Lodge", price: 8000, photo: "icons/h16.jpg" },
+        { name: "Valley View Resort", price: 7500, photo: "icons/h2.jpg" },
+        { name: "Alpine Cottage", price: 6000, photo: "icons/h3.jpg" },
+        { name: "Nanda Devi Inn", price: 9000, photo: "icons/h4.jpg" },
+        { name: "Himalayan Hideaway", price: 12000, photo: "icons/h5.jpg" }
+      ],
+      "Shirdi Sai Temple": [
+        { name: "Calangute Beach Resort", price: 3000, photo: "icons/h1.jpg" },
+        { name: "Taj Resort & Convention Centre", price: 8000, photo: "icons/h2.jpg" },
+        { name: "Goa Marriott Resort", price: 12000, photo: "icons/h3.jpg" },
+        { name: "Beachside Resort", price: 5000, photo: "icons/h4.jpg" },
+        { name: "Sea View Resort", price: 6500, photo: "icons/h5.jpg" }
+      ],
+      "Kundalika River Rafting": [
+        { name: "Tambdi Surla Heritage Hotel", price: 4000, photo: "icons/h6.jpg" },
+        { name: "The Heritage Village Resort", price: 5000, photo: "icons/h7.jpg" },
+        { name: "Shan Resorts", price: 3500, photo: "icons/h8.jpg" },
+        { name: "Tropical Retreat", price: 6000, photo: "icons/h9.jpg" },
+        { name: "Surla Temple Resort", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Tadoba National Park": [
+        { name: "Shantadurga Resort", price: 3000, photo: "icons/h11.jpg" },
+        { name: "Grand Hyatt Goa", price: 9500, photo: "icons/h12.jpg" },
+        { name: "Calangute Palace", price: 7000, photo: "icons/h13.jpg" },
+        { name: "Goan Luxury Resort", price: 8000, photo: "icons/h14.jpg" },
+        { name: "Sunset View Hotel", price: 5000, photo: "icons/h15.jpg" }
+      ],
+      "Borra Caves": [
+        { name: "Dudhsagar View Resort", price: 4000, photo: "icons/h16.jpg" },
+        { name: "Sahyadri Resort", price: 5500, photo: "icons/h17.jpg" },
+        { name: "Trekker's Rest", price: 3500, photo: "icons/h18.jpg" },
+        { name: "Jungle Retreat", price: 6000, photo: "icons/h19.jpg" },
+        { name: "Waterfall Resort", price: 7000, photo: "icons/h20.jpg" }
+      ],
+      "Tirumala Venkateswara Temple": [
+        { name: "Mahavir Jungle Resort", price: 5000, photo: "icons/h1.jpg" },
+        { name: "Jungle Haven Resort", price: 6500, photo: "icons/h2.jpg" },
+        { name: "Sanctuary Lodge", price: 4000, photo: "icons/h3.jpg" },
+        { name: "Wildlife Inn", price: 4500, photo: "icons/h4.jpg" },
+        { name: "Forest View Resort", price: 5500, photo: "icons/h5.jpg" }
+      ],
+      "Araku Valley": [
+        { name: "Chorla Hills Resort", price: 6000, photo: "icons/h6.jpg" },
+        { name: "Mountain View Resort", price: 7000, photo: "icons/h7.jpg" },
+        { name: "Chorla Eco Resort", price: 5000, photo: "icons/h8.jpg" },
+        { name: "Trekker's Den", price: 4500, photo: "icons/h9.jpg" },
+        { name: "Hilltop Retreat", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Beaches of Visakhapatnam": [
+        { name: "Kovalam Beach Resort", price: 7000, photo: "icons/h11.jpg" },
+        { name: "Turtle Beach Resort", price: 9000, photo: "icons/h12.jpg" },
+        { name: "Varkala Beach Resort", price: 8500, photo: "icons/h13.jpg" },
+        { name: "Beachside Haven", price: 6000, photo: "icons/h14.jpg" },
+        { name: "Kovalam Sea Resort", price: 12000, photo: "icons/h15.jpg" }
+      ],
+      "Chilika Lake": [
+        { name: "Munnar Hilltop Resort", price: 7500, photo: "icons/h16.jpg" },
+        { name: "Tea Valley Resort", price: 8000, photo: "icons/h17.jpg" },
+        { name: "Green Valley Resort", price: 5500, photo: "icons/h18.jpg" },
+        { name: "Mountain View Lodge", price: 4500, photo: "icons/h19.jpg" },
+        { name: "Kundala Resort", price: 6500, photo: "icons/h20.jpg" }
+      ],
+      "Amaravati Buddhist Site": [
+        { name: "Alleppey Lake Resort", price: 6500, photo: "icons/h1.jpg" },
+        { name: "Backwater Haven", price: 7500, photo: "icons/h2.jpg" },
+        { name: "Vembanadu Lake Resort", price: 8000, photo: "icons/h3.jpg" },
+        { name: "Boathouse Retreat", price: 12000, photo: "icons/h4.jpg" },
+        { name: "Alleppey Houseboats", price: 9500, photo: "icons/h5.jpg" }
+      ],
+
+      "Fort Kochi": [
+        { name: "Calangute Beach Resort", price: 3000, photo: "icons/h1.jpg" },
+        { name: "Taj Resort & Convention Centre", price: 8000, photo: "icons/h2.jpg" },
+        { name: "Goa Marriott Resort", price: 12000, photo: "icons/h3.jpg" },
+        { name: "Beachside Resort", price: 5000, photo: "icons/h4.jpg" },
+        { name: "Sea View Resort", price: 6500, photo: "icons/h5.jpg" }
+      ],
+      "Kathakali Performance, Kochi": [
+        { name: "Tambdi Surla Heritage Hotel", price: 4000, photo: "icons/h6.jpg" },
+        { name: "The Heritage Village Resort", price: 5000, photo: "icons/h7.jpg" },
+        { name: "Shan Resorts", price: 3500, photo: "icons/h8.jpg" },
+        { name: "Tropical Retreat", price: 6000, photo: "icons/h9.jpg" },
+        { name: "Surla Temple Resort", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Wayanad Trekking": [
+        { name: "Shantadurga Resort", price: 3000, photo: "icons/h11.jpg" },
+        { name: "Grand Hyatt Goa", price: 9500, photo: "icons/h12.jpg" },
+        { name: "Calangute Palace", price: 7000, photo: "icons/h13.jpg" },
+        { name: "Goan Luxury Resort", price: 8000, photo: "icons/h14.jpg" },
+        { name: "Sunset View Hotel", price: 5000, photo: "icons/h15.jpg" }
+      ],
+      "Marina Beach": [
+        { name: "Dudhsagar View Resort", price: 4000, photo: "icons/h16.jpg" },
+        { name: "Sahyadri Resort", price: 5500, photo: "icons/h17.jpg" },
+        { name: "Trekker's Rest", price: 3500, photo: "icons/h18.jpg" },
+        { name: "Jungle Retreat", price: 6000, photo: "icons/h19.jpg" },
+        { name: "Waterfall Resort", price: 7000, photo: "icons/h20.jpg" }
+      ],
+      "Periyar Wildlife Sanctuary": [
+        { name: "Mahavir Jungle Resort", price: 5000, photo: "icons/h1.jpg" },
+        { name: "Jungle Haven Resort", price: 6500, photo: "icons/h2.jpg" },
+        { name: "Sanctuary Lodge", price: 4000, photo: "icons/h3.jpg" },
+        { name: "Wildlife Inn", price: 4500, photo: "icons/h4.jpg" },
+        { name: "Forest View Resort", price: 5500, photo: "icons/h5.jpg" }
+      ],
+      "Ooty Hills": [
+        { name: "Chorla Hills Resort", price: 6000, photo: "icons/h6.jpg" },
+        { name: "Mountain View Resort", price: 7000, photo: "icons/h7.jpg" },
+        { name: "Chorla Eco Resort", price: 5000, photo: "icons/h8.jpg" },
+        { name: "Trekker's Den", price: 4500, photo: "icons/h9.jpg" },
+        { name: "Hilltop Retreat", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Brihadeeswarar Temple": [
+        { name: "Kovalam Beach Resort", price: 7000, photo: "icons/h11.jpg" },
+        { name: "Turtle Beach Resort", price: 9000, photo: "icons/h12.jpg" },
+        { name: "Varkala Beach Resort", price: 8500, photo: "icons/h13.jpg" },
+        { name: "Beachside Haven", price: 6000, photo: "icons/h14.jpg" },
+        { name: "Kovalam Sea Resort", price: 12000, photo: "icons/h15.jpg" }
+      ],
+      "Meenakshi Temple": [
+        { name: "Munnar Hilltop Resort", price: 7500, photo: "icons/h16.jpg" },
+        { name: "Tea Valley Resort", price: 8000, photo: "icons/h17.jpg" },
+        { name: "Green Valley Resort", price: 5500, photo: "icons/h18.jpg" },
+        { name: "Mountain View Lodge", price: 4500, photo: "icons/h19.jpg" },
+        { name: "Kundala Resort", price: 6500, photo: "icons/h20.jpg" }
+      ],
+      "Yelagiri Trekking": [
+        { name: "Yelagiri Trekking", price: 4000, photo: "icons/h16.jpg" },
+        { name: "Sahyadri Resort", price: 5500, photo: "icons/h17.jpg" },
+        { name: "Trekker's Rest", price: 3500, photo: "icons/h18.jpg" },
+        { name: "Jungle Retreat", price: 6000, photo: "icons/h19.jpg" },
+        { name: "Waterfall Resort", price: 7000, photo: "icons/h20.jpg" }
+      ],
+      "Mudumalai Wildlife Sanctuary": [
+        { name: "Mudumalai Wildlife Sanctuary", price: 5000, photo: "icons/h1.jpg" },
+        { name: "Jungle Haven Resort", price: 6500, photo: "icons/h2.jpg" },
+        { name: "Sanctuary Lodge", price: 4000, photo: "icons/h3.jpg" },
+        { name: "Wildlife Inn", price: 4500, photo: "icons/h4.jpg" },
+        { name: "Forest View Resort", price: 5500, photo: "icons/h5.jpg" }
+      ],
+      "Juhu Beach": [
+        { name: "Juhu Beach", price: 6000, photo: "icons/h6.jpg" },
+        { name: "Mountain View Resort", price: 7000, photo: "icons/h7.jpg" },
+        { name: "Chorla Eco Resort", price: 5000, photo: "icons/h8.jpg" },
+        { name: "Trekker's Den", price: 4500, photo: "icons/h9.jpg" },
+        { name: "Hilltop Retreat", price: 7500, photo: "icons/h10.jpg" }
+      ],
+      "Lonavala": [
+        { name: "Kovalam Beach Resort", price: 7000, photo: "icons/h11.jpg" },
+        { name: "Turtle Beach Resort", price: 9000, photo: "icons/h12.jpg" },
+        { name: "Varkala Beach Resort", price: 8500, photo: "icons/h13.jpg" },
+        { name: "Beachside Haven", price: 6000, photo: "icons/h14.jpg" },
+        { name: "Kovalam Sea Resort", price: 12000, photo: "icons/h15.jpg" }
+      ],
+      "Ajanta Caves": [
+        { name: "Munnar Hilltop Resort", price: 7500, photo: "icons/h16.jpg" },
+        { name: "Tea Valley Resort", price: 8000, photo: "icons/h17.jpg" },
+        { name: "Green Valley Resort", price: 5500, photo: "icons/h18.jpg" },
+        { name: "Mountain View Lodge", price: 4500, photo: "icons/h19.jpg" },
+        { name: "Kundala Resort", price: 6500, photo: "icons/h20.jpg" }
+      ]
+      
+    };
+
+
+ 
+    // Utility function to check if string starts with a prefix
+    function startsWith(str, prefix) {
+      return str.substring(0, prefix.length) === prefix;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const hotelList = document.getElementById("hotelList");
+      const messageDiv = document.getElementById("message");
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const destination = urlParams.get("destination");
+      console.log("Fetching hotels for:", destination);
+
+      if (!destination) {
+        messageDiv.textContent = "No destination specified in URL.";
+        return;
+      }
+
+      // Fetch admin-added hotels from backend
+      fetch(`http://localhost:3000/api/hotels?destination=${encodeURIComponent(destination)}`)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          console.log("Fetched hotels:", data);
+
+          // Find predefined hotels ignoring case
+          const normalizedDestination = Object.keys(hotels).find(
+            key => key.toLowerCase() === destination.toLowerCase()
+          );
+          const predefinedHotels = normalizedDestination ? hotels[normalizedDestination] : [];
+
+          // Combine predefined and fetched hotels
+          const allHotels = [...predefinedHotels, ...data];
+
+          if (allHotels.length === 0) {
+            messageDiv.textContent = "No hotels available for this destination.";
+            hotelList.style.display = "none";
+          } else {
+            messageDiv.style.display = "none";
+            hotelList.style.display = "grid";
+            renderHotels(allHotels, destination);
+          }
+        })
+        .catch(err => {
+          console.error("Error fetching hotels:", err);
+
+          // On error fallback to predefined only
+          const normalizedDestination = Object.keys(hotels).find(
+            key => key.toLowerCase() === destination.toLowerCase()
+          );
+          const predefinedHotels = normalizedDestination ? hotels[normalizedDestination] : [];
+
+          if (predefinedHotels.length === 0) {
+            messageDiv.textContent = "No hotels available for this destination.";
+            hotelList.style.display = "none";
+          } else {
+            messageDiv.style.display = "none";
+            hotelList.style.display = "grid";
+            renderHotels(predefinedHotels, destination);
+          }
+        });
+    });
+
+    // Render hotel cards dynamically
+    function renderHotels(hotels, destination) {
+      const hotelList = document.getElementById("hotelList");
+      hotelList.innerHTML = ""; // Clear existing
+
+      hotels.forEach(hotel => {
+        // If photo is base64 data URI, replace with fallback image path
+        if (startsWith(hotel.photo, "data:image")) {
+          console.warn(`Base64 image detected for ${hotel.name}, replacing with placeholder.`);
+          hotel.photo = "uploads/default-hotel.jpg"; // Make sure this image exists in your project
+        }
+
+        // Create card container
+        const card = document.createElement("div");
+        card.className = "hotel-card";
+
+        // Create image element
+        const img = document.createElement("img");
+        img.src = hotel.photo;
+        img.alt = hotel.name;
+
+        // Create content container
+        const content = document.createElement("div");
+        content.className = "content";
+
+        // Hotel name
+        const h3 = document.createElement("h3");
+        h3.textContent = hotel.name;
+
+        // Location paragraph
+        const locationP = document.createElement("p");
+        locationP.textContent = `Location: ${destination}`;
+
+        // Price paragraph
+        const priceP = document.createElement("p");
+        priceP.innerHTML = `<strong>Price:</strong> ₹${hotel.price}`;
+
+        // Book now button
+        const button = document.createElement("button");
+        button.textContent = "Book Now";
+        button.addEventListener("click", () => {
+          bookHotel(hotel.name, destination, hotel.price, hotel.photo);
+        });
+
+        // Append all inside content
+        content.appendChild(img);
+        content.appendChild(h3);
+        content.appendChild(locationP);
+        content.appendChild(priceP);
+        content.appendChild(button);
+
+        // Append content to card
+        card.appendChild(content);
+
+        // Append card to hotel list
+        hotelList.appendChild(card);
+      });
+    }
+
+    // Redirect to booking page with hotel info passed as URL params
+    function bookHotel(name, location, price, photo) {
+      console.log("Booking hotel:", name, location, price, photo);
+
+      // If photo is base64 string, replace with fallback URL
+      if (startsWith(photo, "data:image")) {
+        photo = "uploads/default-hotel.jpg"; // fallback image
+      }
+
+      // Build booking page URL with encoded parameters
+      const bookingUrl = `Bookhotels.html?hotelName=${encodeURIComponent(name)}&hotelLocation=${encodeURIComponent(location)}&hotelPrice=${encodeURIComponent(price)}&hotelImage=${encodeURIComponent(photo)}`;
+
+      window.location.href = bookingUrl;
+    }
+   </script>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+    </div>
+  </footer>
+ 
+
+</body>
+</html>

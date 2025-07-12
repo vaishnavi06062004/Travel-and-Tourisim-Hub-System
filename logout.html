@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logout</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      background: #ffffff;
+      color: #2575fc;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>You have been logged out</h1>
+    <p>Thank you for visiting. You can login again to continue.</p>
+    <button onclick="goToLogin()">Login Again</button>
+  </div>
+
+  <script>
+    // Clear session or localStorage (if used)
+    localStorage.removeItem("user"); // adjust key as needed
+    // sessionStorage.clear(); // Uncomment if using sessionStorage
+
+    function goToLogin() {
+      window.location.href = "user.html"; // Change this to your login page
+    }
+  </script>
+</body>
+</html>

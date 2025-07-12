@@ -1,0 +1,219 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+  }
+  
+  header {
+    background-color: #0066cc;
+    padding: 20px;
+    color: white;
+    text-align: center;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .hero {
+    text-align: center;
+    padding: 60px 20px;
+    background: url('../assets/images/travel.jpg') no-repeat center center/cover;
+    color: white;
+  }
+  
+  .hero .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #ff6600;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #eee;
+    font-size: 14px;
+  }
+  
+  /* Admin Login Form Styles */
+  #login-section {
+    display: flex;
+    flex-direction: column; /* Stack form fields vertically */
+    gap: 15px; /* Add space between form elements */
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  #login-section input {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  #login-section button {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #login-section button:hover {
+    background-color: #004c99;
+  }
+  
+  #login-error {
+    text-align: center;
+    color: red;
+    font-size: 14px;
+  }
+  
+  /* Destination Form Layout */
+  #destination-form {
+    display: flex;
+    flex-direction: column; /* Stack the form fields vertically */
+    gap: 15px; /* Add space between form elements */
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  #destination-form input {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  #destination-form button {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #destination-form button:hover {
+    background-color: #004c99;
+  }
+  
+  /* Destination List and Buttons */
+  #destination-list {
+    margin-top: 30px;
+  }
+
+  
+  #destination-list li {
+    padding: 10px;
+    background: #f1f1f1;
+    margin: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #destination-list button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #destination-list button:hover {
+    background-color: #cc0000;
+  }
+
+    /* hotel Form Layout */
+    #hotel-form {
+      display: flex;
+      flex-direction: column; /* Stack the form fields vertically */
+      gap: 15px; /* Add space between form elements */
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    #hotel-form input {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    
+    #hotel-form button {
+      padding: 10px 20px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    #hotel-form button:hover {
+      background-color: #004c99;
+    }
+    
+    /* Destination List and Buttons */
+    #hotel-list {
+      margin-top: 30px;
+    }
+    
+    
+    #hotel-list li {
+      padding: 10px;
+      background: #f1f1f1;
+      margin: 5px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    #hotel-list button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    #hotel-list button:hover {
+      background-color: #cc0000;
+    }
+        footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+    
+  

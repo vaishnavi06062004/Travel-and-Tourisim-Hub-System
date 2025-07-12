@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Explore Destinations</title>
+  <style>
+     body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .content {
+      padding: 2rem;
+      text-align: center;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .search-filter {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .search-filter input, .search-filter select {
+      padding: 10px;
+      font-size: 16px;
+    }
+    .destination-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .destination-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s ease-in-out;
+    }
+    .destination-card:hover {
+      transform: scale(1.02);
+    }
+    .destination-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .destination-card .content {
+      padding: 15px;
+    }
+    .destination-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #222;
+    }
+    .destination-card p {
+      margin: 0 0 8px;
+      color: #555;
+    }
+    .destination-card button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 0 0 10px 10px;
+    }
+    .destination-card button:hover {
+      background-color: #0056b3;
+    }
+    ul {
+      list-style: none;
+      display: flex;
+      padding-left: 10px;
+    }
+    ul li {
+      margin-left: 20px;
+    }
+    ul li a {
+      color: #1d13de;
+      text-decoration: none;
+      font-size: 18px;
+    }
+    ul li a.active {
+      font-weight: bold;
+    }
+    footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+  <div class="container">
+    <h1>Explore Destinations</h1>
+    <div class="search-filter">
+      <input type="text" id="searchInput" placeholder="Search destinations..." />
+      <select id="stateFilter">
+        <option value="">All States</option>
+      </select>
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+    <div id="destinationList" class="destination-list"></div>
+  </div>
+
+  <script>
+    // Predefined destinations
+    const predefinedDestinations = [
+      { name: "Calangute Beach", location: "Goa", price: 5000, category: "Beach", image:"icons/goabeach.jpeg" },
+      { name: "Tambdi Surla Temple", location: "Goa", price: 3200, category: "Historical", image:"icons/goahistory.jpeg" },
+      { name: "Shantadurga Temple", location: "Goa", price: 3000, category: "Cultural", image:"icons/temple.jpeg" },
+      { name: "Dudhsagar Falls Trek", location: "Goa", price: 4500, category: "Adventure", image:"icons/goaadventure.jpeg" },
+      { name: "Bhagwan Mahavir Wildlife Sanctuary", location: "Goa", price: 4000, category: "Wildlife", image:"icons/goawild.jpeg" },
+      { name: "Chorla Ghats", location: "Goa", price: 3800, category: "Mountain", image:"icons/mountain.jpeg" },
+      { name: "Kovalam Beach", location: "Kerala", price: 4500, category: "Beach", image:"icons/keralabeach.jpeg" },
+      { name: "Munnar Hills", location: "Kerala", price: 5500, category: "Mountain", image:"icons/keralamountain.jpeg" },
+      { name: "Fort Kochi", location: "Kerala", price: 5000, category: "Historical", image:"icons/keralahistory.jpeg" },
+      { name: "Kathakali Performance, Kochi", location: "Kerala", price: 2500, category: "Cultural", image:"icons/keralaculture.jpeg" },
+      { name: "Wayanad Trekking", location: "Kerala", price: 6000, category: "Adventure", image:"icons/keralaadventure.jpeg" },
+      { name: "Periyar Wildlife Sanctuary", location: "Kerala", price: 5800, category: "Wildlife", image:"icons/keralawild.jpeg" },
+      { name: "Marina Beach", location: "Tamil Nadu", price: 4000, category: "Beach", image:"icons/tamilbeach.jpeg" },
+      { name: "Ooty Hills", location: "Tamil Nadu", price: 5300, category: "Mountain", image:"icons/tamilmountain.jpeg" },
+      { name: "Brihadeeswarar Temple", location: "Tamil Nadu", price: 4800, category: "Historical", image:"icons/tamilhistory.jpeg" },
+      { name: "Meenakshi Temple", location: "Tamil Nadu", price: 3000, category: "Cultural", image:"icons/tamilculture.jpeg" },
+      { name: "Yelagiri Trekking", location: "Tamil Nadu", price: 4200, category: "Adventure", image:"icons/tamiladventure.jpeg" },
+      { name: "Mudumalai Wildlife Sanctuary", location: "Tamil Nadu", price: 5200, category: "Wildlife", image:"icons/tamilwild.jpeg" },
+      { name: "Juhu Beach", location: "Maharashtra", price: 3800, category: "Beach", image:"icons/mbeach.jpeg" },
+      { name: "Lonavala", location: "Maharashtra", price: 4200, category: "Mountain", image:"icons/mmountain.jpeg" },
+      { name: "Ajanta Caves", location: "Maharashtra", price: 5000, category: "Historical", image:"icons/mhistory.jpeg" },
+      { name: "Shirdi Sai Temple", location: "Maharashtra", price: 3500, category: "Cultural", image:"icons/mculture.jpeg" },
+      { name: "Kundalika River Rafting", location: "Maharashtra", price: 4800, category: "Adventure", image:"icons/madventure.jpeg" },
+      { name: "Tadoba National Park", location: "Maharashtra", price: 6200, category: "Wildlife", image:"icons/mwild.jpeg" },
+      { name: "Borra Caves", location: "Andhra Pradesh", price: 4500, category: "Adventure", image:"icons/aadventure.jpeg" },
+      { name: "Tirumala Venkateswara Temple", location: "Andhra Pradesh", price: 3000, category: "Cultural", image:"icons/aculture.jpeg" },
+      { name: "Araku Valley", location: "Andhra Pradesh", price: 5000, category: "Mountain", image:"icons/amountain.jpeg" },
+      { name: "Beaches of Visakhapatnam", location: "Andhra Pradesh", price: 4000, category: "Beach", image:"icons/abeach.jpeg" },
+      { name: "Chilika Lake", location: "Andhra Pradesh", price: 4500, category: "Wildlife", image:"icons/awild.jpeg" },
+      { name: "Amaravati Buddhist Site", location: "Andhra Pradesh", price: 3500, category: "Historical", image:"icons/ahistory.jpeg" },
+    ];
+
+    // Initially only predefined destinations; will update after fetch
+    let allDestinations = [...predefinedDestinations];
+
+    const destinationList = document.getElementById("destinationList");
+    const searchInput = document.getElementById("searchInput");
+    const stateFilter = document.getElementById("stateFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    function getUniqueOptions(array, key) {
+      return [...new Set(array.map(item => item[key]))].sort();
+    }
+
+    function populateFilters() {
+      // Clear existing options but keep the default first option
+      stateFilter.innerHTML = '<option value="">All States</option>';
+      categoryFilter.innerHTML = '<option value="">All Categories</option>';
+
+      getUniqueOptions(allDestinations, "location").forEach(state => {
+        const opt = document.createElement("option");
+        opt.value = state;
+        opt.textContent = state;
+        stateFilter.appendChild(opt);
+      });
+
+      getUniqueOptions(allDestinations, "category").forEach(cat => {
+        const opt = document.createElement("option");
+        opt.value = cat;
+        opt.textContent = cat;
+        categoryFilter.appendChild(opt);
+      });
+    }
+
+    function renderDestinations(list) {
+      destinationList.innerHTML = "";
+      list.forEach(dest => {
+        const card = document.createElement("div");
+        card.className = "destination-card";
+        card.innerHTML = `
+          <img src="${dest.image}" alt="${dest.name}">
+          <div class="content">
+            <h3>${dest.name}</h3>
+            <p><strong>State:</strong> ${dest.location}</p>
+            <p><strong>Category:</strong> ${dest.category}</p>
+            <p><strong>Price:</strong> ₹${dest.price}</p>
+            <button onclick="window.location.href='book_destination.html?destination=${encodeURIComponent(dest.name)}'">Book Now</button>
+          </div>
+        `;
+        destinationList.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      const search = searchInput.value.toLowerCase();
+      const state = stateFilter.value;
+      const category = categoryFilter.value;
+
+      const filtered = allDestinations.filter(dest =>
+        dest.name.toLowerCase().includes(search) &&
+        (state === "" || dest.location === state) &&
+        (category === "" || dest.category === category)
+      );
+
+      renderDestinations(filtered);
+    }
+
+    // Fetch destinations from backend API and merge with predefined
+    async function fetchDestinations() {
+      try {
+        const response = await fetch('http://localhost:3000/api/destinations');
+        const dbDestinations = await response.json();
+
+        allDestinations = [...predefinedDestinations, ...dbDestinations];
+
+        populateFilters();
+        renderDestinations(allDestinations);
+      } catch (error) {
+        console.error('Error fetching destinations:', error);
+        // fallback: only predefined destinations
+        populateFilters();
+        renderDestinations(predefinedDestinations);
+      }
+    }
+
+    // Event listeners for filters and search
+    searchInput.addEventListener("input", applyFilters);
+    stateFilter.addEventListener("change", applyFilters);
+    categoryFilter.addEventListener("change", applyFilters);
+
+    // Initial fetch and render
+    fetchDestinations();
+  </script>
+   <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

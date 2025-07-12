@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Bookings</title>
+  <style>
+    /* Basic Styles */
+     body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background-color: #007bff;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 1rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0.5rem;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+ 
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .booking-card {
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .booking-card button {
+      background-color: #dc3545;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .booking-card button:hover {
+      background-color: #c82333;
+    }
+    ul {
+            list-style: none;
+            display: flex;
+        }
+
+        ul li {
+            margin-left: 20px;
+        }
+
+       ul li a {
+            color: #1d13de;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+         ul li a.active {
+            font-weight: bold;
+        }
+           footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+   <nav>
+    <a href="dashboard.html">Dashboard</a>
+  </nav>
+ 
+  <div class="container">
+    <h1>Your Bookings</h1>
+    <div id="bookingsList"></div>
+  </div>
+
+  <script>
+    // Function to load and display bookings
+    function loadBookings() {
+      const bookingsList = document.getElementById('bookingsList');
+      const bookings = JSON.parse(localStorage.getItem('hotelBookings')) || [];
+
+      if (bookings.length === 0) {
+        bookingsList.innerHTML = "<p>No bookings found.</p>";
+        return;
+      }
+
+      bookingsList.innerHTML = ""; // Clear the previous list
+      bookings.forEach((booking, index) => {
+        const bookingCard = document.createElement('div');
+        bookingCard.className = 'booking-card';
+        bookingCard.innerHTML = `
+          <h3>${booking.hotelName}</h3>
+          <p><strong>Location:</strong> ${booking.hotelLocation}</p>
+          <p><strong>Price:</strong> ₹${booking.hotelPrice}</p>
+          <p><strong>Customer Name:</strong> ${booking.name}</p>
+  <p><strong>Phone Number:</strong> ${booking.phone}</p>
+          <p><strong>Check-in:</strong> ${booking.checkIn}</p>
+          <p><strong>Check-out:</strong> ${booking.checkOut}</p>
+          <button onclick="cancelBooking(${index})">Cancel Booking</button>
+        `;
+        bookingsList.appendChild(bookingCard);
+      });
+    }
+
+    // Function to cancel a booking
+    function cancelBooking(index) {
+      const bookings = JSON.parse(localStorage.getItem('hotelBookings')) || [];
+      bookings.splice(index, 1); // Remove the selected booking
+      localStorage.setItem('hotelBookings', JSON.stringify(bookings)); // Save updated bookings
+
+      alert("Booking has been cancelled successfully!");
+      loadBookings(); // Refresh the bookings list
+    }
+
+    // Load bookings when the page is loaded
+    loadBookings();
+  </script>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Panel - Travel & Tourism Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .form-container {
+      max-width: 400px;
+      margin: auto;
+      padding: 5rem;
+      background-color: #f5f5f5;
+      border-radius: 10px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    input[type="email"], input[type="password"], input[type="text"] {
+      height: 15px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    input[type="submit"], button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+    .toggle-link, .forgot-link {
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+      color: #007bff;
+    }
+    #forgotForm {
+      display: none;
+    }
+        footer {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 14px;
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>User Panel</h1>
+  </header>
+
+  <div class="form-container" id="loginForm">
+    <h2>Login</h2>
+    <form onsubmit="return loginUser()">
+      <label for="loginEmail">Email:</label>
+      <input type="email" id="loginEmail" required />
+
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" required />
+
+      <input type="submit" value="Login" />
+    </form>
+    <p class="toggle-link" onclick="showRegister()">Don't have an account? Register here</p>
+    <p class="forgot-link" onclick="showForgotForm()">Forgot Password?</p>
+  </div>
+
+  <div class="form-container" id="registerForm" style="display:none;">
+    <h2>Register</h2>
+    <form onsubmit="return registerUser()">
+      <label for="regName">Full Name:</label>
+      <input type="text" id="username" required />
+
+      <label for="regEmail">Email:</label>
+      <input type="email" id="email" required />
+
+      <label for="regPassword">Password:</label>
+      <input type="password" id="password" required />
+
+      <input type="submit" value="Register" id="registerBtn" />
+    </form>
+    <p class="toggle-link" onclick="showLogin()">Already have an account? Login here</p>
+  </div>
+
+  <div class="form-container" id="forgotForm" style="display:none;">
+    <h2>Forgot Password</h2>
+    <form onsubmit="return retrievePassword()">
+      <label for="forgotEmail">Enter your registered email:</label>
+      <input type="email" id="forgotEmail" required />
+      <input type="submit" value="Retrieve Password" />
+    </form>
+    <p class="toggle-link" onclick="showLogin()">Back to Login</p>
+  </div>
+
+  <script>
+    function showRegister() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("registerForm").style.display = "block";
+      document.getElementById("forgotForm").style.display = "none";
+    }
+
+    function showLogin() {
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("forgotForm").style.display = "none";
+    }
+
+    function showForgotForm() {
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("forgotForm").style.display = "block";
+    }
+
+    function registerUser() {
+      const name = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      localStorage.setItem("user", JSON.stringify({ name, email, password }));
+      alert("Registration successful! Please log in.");
+      showLogin();
+      return false;
+    }
+
+    function loginUser() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.email === email && user.password === password) {
+        alert("Login successful! Welcome " + user.name);
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid email or password.");
+      }
+      return false;
+    }
+
+    function retrievePassword() {
+      const email = document.getElementById("forgotEmail").value;
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.email === email) {
+        alert("Your password is: " + user.password);
+      } else {
+        alert("No user found with this email.");
+      }
+      return false;
+    }
+
+    // Server-side registration (optional)
+    document.getElementById("registerBtn").addEventListener("click", function () {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      fetch("http://localhost:5000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+      })
+      .then(res => res.json())
+      .then(data => alert(data.message))
+      .catch(err => console.error(err));
+    });
+  </script>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TravelHub. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
