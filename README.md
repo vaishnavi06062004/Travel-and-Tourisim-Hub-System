@@ -1,10 +1,15 @@
-<img width="1916" height="915" alt="Screenshot 2025-06-07 190313" src="https://github.com/user-attachments/assets/bb0eecdb-ab95-4ca7-9823-94106ceb8825" />first create a folder of project name then create a folder named public for frontend .in the public folder agin create a folder called icons to store the images and create another folder called js for admin side functionality.
+**first create a folder of project name then create a folder named public for frontend .in the public folder agin create a folder called icons to store the images and create another folder called js for admin side functionality.
 in the js folder create admin.js,destinations.js,hotels.js files.
 in the main public folder create about,admin,admin-dashboard,book_destination,bookhotels,bookings,calendar,caluculator,checkhotels,contact,customer,dashboard,destinations,googlemaps,hotels,index,logout,notepad,services,user,userdestination,viewbookedhotels,viewhotels files as html files. and create a styles.css files for styling
 for the backend processing first install node js and install relevant packages like express.js,mysql2.
 then in the backend folder create a folder named routes which has auth.js,bookhotels.js,bookings.js,customer.js,destinations.js,hotels.js ,uploads.js files.
-create another folder named uploads to store the uploaded image files!
-outputs
+create another folder named uploads to store the uploaded image files!**
+
+
+**outputs**
+
+
+<img width="1916" height="915" alt="Screenshot 2025-06-07 190313" src="https://github.com/user-attachments/assets/bb0eecdb-ab95-4ca7-9823-94106ceb8825" />
 <img width="1886" height="885" alt="Screenshot 2025-06-07 191304" src="https://github.com/user-attachments/assets/e97b3a16-9f4b-4892-a2c7-2da9ffffa231" />
 <img width="1190" height="919" alt="Screenshot 2025-06-07 191231" src="https://github.com/user-attachments/assets/18c976f4-9b9c-438c-918b-cc902a06292e" />
 <img width="1398" height="913" alt="Screenshot 2025-06-07 191115" src="https://github.com/user-attachments/assets/f38f6031-05c2-4e44-8a2c-e4f281d56a32" />
